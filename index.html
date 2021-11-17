@@ -12,7 +12,7 @@
     <section class="main__control container">
       <h1>Tasks list</h1>
       <div class="controls">
-        <input type="text" class="new-tast">
+        <input type="text" class="new-task">
         <button class="add-task-button">Add</button>
         <button class="clear-task-button">Clear</button>
       </div>
@@ -21,6 +21,13 @@
       </ul>
     </section>
   </main>
+
+  <template id="task-template">
+    <li class="task">
+      <label for="">take out the trash</label>
+      <input type="checkbox" checked>
+    </li>
+  </template>
 
   <script type="module" src="js/index.js"></script>
 </body>
