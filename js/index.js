@@ -13,7 +13,7 @@ let tasks = [
   },
 ];
 
-const taskTemplateElement =document.querySelector('#task-template').content;
+const taskTemplateElement = document.querySelector('#task-template').content;
 
 const mainElement = document.querySelector('.main');
 const newTaskElement = mainElement.querySelector('.new-task');
@@ -32,6 +32,60 @@ const clearTasks = () => { // можно было записать в одну �
 }
 
 const completeTask = (id) => {
-  const existTask = task.find((task) => task.id === id);
+  const existTask = tasks.find((task) => task.id === id);
   existTask.isDone = !existTask.isDone;
 }
+
+
+const render = () => {
+  const newFragment = document.createDocumentFragment();
+  tasksListElement.innerHTML = '';
+
+  tasks.forEach(({id, title, isDone}) => {
+    const newTask = taskTemplateElement.cloneNode(true);
+
+    if (isDone) {
+      newTask.querySelector('li').classList.add('task--complete');
+    }
+
+    const labelElement = newTask.querySelector('label');
+    labelElement.textContent = title;
+    labelElement.htmlFor = id;
+
+    const inputElement = newTask.querySelector('input');
+    inputElement.id = id;
+    inputElement.checked = isDone;
+
+    inputElement.addEventListener('change', ({target}) => {
+      completeTask(target.id);
+      render();
+    })
+
+    newFragment.append(newTask);
+  })
+
+  tasksListElement.append(newFragment);
+}
+
+const addTaskButtonHandler = () => {
+  const {value: newTaskTitle} = newTaskElement;
+
+  if (newTaskTitle.trim() === '') {
+    return;
+  }
+
+  addNewTask(newTaskTitle);
+  render();
+  newTaskElement.value = '';
+  newTaskElement.focus();
+}
+
+const clearTaskButtonHandler = () => {
+  clearTasks();
+  render();
+};
+
+addTaskButtonElement.addEventListener('click', addTaskButtonHandler);
+clearTaskButtonElement.addEventListener('click', clearTaskButtonHandler);
+
+render();
